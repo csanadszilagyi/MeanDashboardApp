@@ -76,7 +76,7 @@ router.post('/login', async (req, res, next) => {
             id: user.id,
             email: user.email
         },
-        iss: "user-auth",
+        iss: "dashboard-app",
         sub: user.id
     });
 
