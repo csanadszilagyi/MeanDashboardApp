@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "cors": "^2.8.5",
+    "express": "*",
+    "express-validator": "^5.3.1",
+    "jsonwebtoken": "*",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.9.3",
+    "passport": "*",
+    "passport-jwt": "*"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "MIT"
+}
