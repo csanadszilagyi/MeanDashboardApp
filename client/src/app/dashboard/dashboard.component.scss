@@ -1,0 +1,33 @@
+.router-wrapper {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.main-content {
+    display: block;
+    position: relative;
+    background-color: #f1f4f6;
+    min-height: 100vh;
+}
+
+.header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    z-index: 10;
+    transition: all .2s;
+    width: 100%;
+    background-color: #fafbfc;
+    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+    
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #6c757d;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #343a40;
+}

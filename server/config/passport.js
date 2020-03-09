@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwtStrategy = require('passport-jwt').Strategy;
 const extractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken');
@@ -36,7 +37,7 @@ module.exports = function(passport) {
     let opts = {};
     opts.jwtFromRequest = (req) => cookieExtractor(req); 
     //ExtractJwt.fromAuthHeaderAsBearerToken();
-    opts.secretOrKey = config.JWT_SECRET;
+    opts.secretOrKey = process.env.ACCESS_TOKEN_SECRET;
     // opts.issuer = '';
     // opts.audience = '';
     

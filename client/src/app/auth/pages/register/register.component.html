@@ -1,0 +1,69 @@
+<div class="card mt-4">
+    <div class="card-header text-center">
+        <h3 class="card-header-title font-size-lg text-capitalize font-weight-normal">Register</h3>
+    </div>
+    <div class="card-body">
+        <p class="text-center"> Please fill all the fields.</p>
+        <ng-container [ngSwitch]="formState.type" >
+            <div *ngSwitchCase="'success'" class="alert alert-success mt-2 text-center animated fadeIn" role="alert">
+                {{ formState?.message }}
+            </div>
+            <div *ngSwitchCase="'error'" class="alert alert-danger mt-2 animated fadeIn" role="alert">
+                {{ formState?.message }}
+            </div>
+        </ng-container>
+        <form (ngSubmit)="submit($event, tempForm)" #tempForm="ngForm" autocomplete="nope">
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <label for="email">First name</label>
+                    <input [ngClass]="{ 'is-invalid': submitAttempted && firstName.invalid }" class="form-control" id="firstName" type="firstName" name="firstName" [(ngModel)]="formData.firstName" #firstName="ngModel" required>
+                    <div *ngIf="submitAttempted && firstName.invalid" class="invalid-feedback">
+                        <div *ngIf="firstName.errors.required">
+                            First name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <label for="email">Last name</label>
+                    <input [ngClass]="{ 'is-invalid': submitAttempted && lastName.invalid }" class="form-control" id="lastName" type="lastName" name="lastName" [(ngModel)]="formData.lastName" #lastName="ngModel" required>
+                    <div *ngIf="submitAttempted && lastName.invalid" class="invalid-feedback">
+                        <div *ngIf="lastName.errors.required">
+                            Last name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <label for="email">Email</label>
+                    <input [ngClass]="{ 'is-invalid': submitAttempted && email.invalid }" class="form-control" id="email" type="email" name="email" [(ngModel)]="formData.email" #email="ngModel" required>
+                    <div *ngIf="submitAttempted && email.invalid" class="invalid-feedback">
+                        <div *ngIf="email.errors.required">
+                            Email is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <label for="password">Password</label>
+                    <input [ngClass]="{ 'is-invalid': submitAttempted && password.invalid }" class="form-control" id="password" type="password" name="password" [(ngModel)]="formData.password" #password="ngModel" required>
+                    <div *ngIf="submitAttempted && password.invalid" class="invalid-feedback">
+                        <div *ngIf="password.errors.required">
+                            Password is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-4">
+                    <a routerLink="['/auth/login']" class="btn btm-outline-light bg-light text-dark border-dark btn-block">
+                        <i class="fas fa-chevron-left fa-sm align-baseline"></i>
+                        Back
+                    </a>
+                </div>
+                <div class="form-group col-8">
+                    <button [disabled]="formSubmitted" type="submit" class="btn bg-success text-white btn-block">
+                        <span *ngIf="formSubmitted" class="spinner-border spinner-border-sm align-middle" role="status" aria-hidden="true"></span>
+                        Register
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

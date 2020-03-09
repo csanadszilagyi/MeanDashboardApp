@@ -81,61 +81,29 @@ router.get('', (req, res, next) => {
         });
 });
 
-
-
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', (req, res, next) => {
 
     const id = req.params.id.toString();
-    const body = req.body.data.attributes;
+    const body = req.body.data;
 
-    const update = {...body};
-    const user = await User.findByIdAndUpdate(id, update);
-
-    if (user) {
-        user.update()
-        return res.status(200).json({
-            data: {
-                type: 'users',
-                id: user.id,
-                attributes: {
-                    changedProps: body
+    User.findByIdAndUpdate(id, body)
+        .then(user => {
+            res.status(200).json({
+                data: {
+                    id,
+                    message: 'User successfully modified!'
                 }
-            }
+                
+            });
+        })
+        .catch(error => {
+            res.status(404).json({
+                data: {
+                    id,
+                    message: 'User was not found.'
+                }
+            });
         });
-    }
-
-    /*
-    let id = +req.params.id;
-    let user = _.find(userdb.users, user => user.id === id);
-
-    if(user) {
-
-        let changedProps = {};
-        _.forIn(req.body.attributes, (value, key) => {
-            if(_.has(user, key)) {
-                user[key] = value;
-                changedProps[key] = value;
-            }
-        });
-
-        res.status(200).json({data: {
-                type: 'users',
-                id: user.id,
-                attributes: changedProps
-            }
-        });
-        next();
-    }
-    */
-    return res.status(404).json({
-        data: {},
-        errors: {
-            //id: id,
-            title: 'User was not found.',
-            status: 404
-        }
-    });
-
 });
 
 router.get('/:id', async (req, res, next) => {
@@ -146,20 +114,14 @@ router.get('/:id', async (req, res, next) => {
 
     if (user) {
         return res.status(200).json({
-            data: {
-                type: 'users',
-                id: user.id,
-                attributes: mapUser(user)
-            }
+            data: mapUser(user)
         });
     }
     
     return res.status(404).json({
-        data: {},
-        errors: {
-            //id: id,
-            title: 'User was not found.',
-            status: 404
+        data: {
+            id: id,
+            message: 'User was not found.',
         }
     });
 });

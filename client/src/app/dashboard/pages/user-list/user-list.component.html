@@ -1,0 +1,89 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-header-title text-left font-size-lg text-capitalize font-weight-normal">Users</h3>
+    </div>
+    <div class="card-body">
+        <div class="mt-3">
+            <nav *ngIf="paginationInfo">
+                <ul class="pagination justify-content-center">
+                    <li [ngClass]="{disabled:currentPage === 1}" class="page-item">
+                        <span class="page-link" (click)="paginate(1)">First</span>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === 1}" class="page-item">
+                        <span class="page-link" (click)="paginatePrev()">Previous</span>
+                    </li>
+                    <!-- <li class="page-item active">
+                        <span class="page-link">{{ currentPage }}</span>
+                    </li> -->
+                    <li class="page-item" *ngFor="let pageNumber of paginationInfo.pageNumbers" [ngClass]="{active:currentPage === pageNumber}">
+                        <span *ngIf="currentPage !== pageNumber; else noClick" class="page-link" (click)="paginate(pageNumber)">{{ pageNumber }}</span>
+                        <ng-template #noClick>
+                            <span class="page-link">{{ pageNumber }}</span>
+                        </ng-template>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === paginationInfo.lastPage}" class="page-item">
+                        <span class="page-link" (click)="paginateNext()">Next</span>
+                    </li>
+                    <li [ngClass]="{disabled:currentPage === paginationInfo.lastPage}" class="page-item">
+                        <span class="page-link" (click)="paginate(paginationInfo.lastPage)">Last</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <ng-template #loader>
+                <div class="col-md-12 loader-wrapper">
+                  <div class="loader-ripple">
+                    <div></div>
+                    <div></div>
+                  </div>
+                </div>
+            </ng-template>
+            
+            
+            <div class="table-wrapper">  
+                <ng-container *ngIf="loading === false; else loader;">
+                <table class="table table-hover table-bordered animated fadeIn">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">
+                                ID
+                            </th>
+                            <th scope="col">
+                                First Name
+                            </th>
+                            <th scope="col">
+                                Last Name
+                            </th>
+                            <th scope="col">
+                                Email
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users">
+                            <td class="align-middle" scope="col">
+                                {{ user.id }}
+                            </td>
+                            <td class="align-middle" scope="col">
+                                {{ user.firstName }}
+                            </td>
+                            <td class="align-middle" scope="col">
+                                {{ user.lastName }}
+                            </td>
+                            <td class="align-middle" scope="col">
+                                {{ user.email }}
+                            </td>
+                            <!--  
+                            <td class="align-middle user-actions">
+                                <button type="button" class="btn btn-info" (click)="handleEdit(user.id)">Edit</button>
+                                <button type="button" class="btn btn-danger ml-2" (click)="handleDelete(user.id)">Remove</button>
+                            </td>
+                            -->
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            </div>   
+        </div>
+    </div>
+</div>

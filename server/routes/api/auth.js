@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -19,13 +20,13 @@ async function attemptLogin(email, password) {
 }
 
 const createToken = payload => 
-    jwt.sign(payload, config.JWT_SECRET, {
+    jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: config.JWT_TOKEN_EXPIRATION
     });
 
 const verifyToken = token =>
   new Promise((resolve, reject) =>
-    jwt.verify(token, config.JWT_SECRET, (err, decode) =>
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) =>
       decode !== undefined ? resolve(decode) : reject(err)
     )
 );
@@ -41,20 +42,23 @@ const createHeaderSignature = jwtToken => {
 // 30 min - in MS
 const COOKIE_PAYLOAD_TOKEN_AGE = 600000; // 1 min = 60000 Ms
 
-/*
+/* 
+ * GOAL:
  * Jwt token stored in cookies in two parts: first part contains the header.payload, second contains the signature.
- * If the jwt expires (checked on the backend with each reques on the jwt-protected routes), response the frontend asking the user
+ * If the jwt expires (checked on the backend with each requests on the jwt-protected routes), 
+ * the server sending a response to the client to ask the user
  * to retype his password. If correct, new payload will be created for 10 minutes. 
  * The payload cookie's lifetime is 1 hour.
-*/
+ * NOTE: It is not implemented yet!
+ */
 router.post('/refreshtoken', async (req, res, next) => {
     
 });
 
 router.post('/login', async (req, res, next) => {
     
-    const email = req.body.data.attributes.email;
-    const password = req.body.data.attributes.password;
+    const email = req.body.data.email;
+    const password = req.body.data.password;
 
     const user = await attemptLogin(email, password);
 
@@ -79,8 +83,8 @@ router.post('/login', async (req, res, next) => {
 
     const {headerPayload, signature} = createHeaderSignature(accessToken);
 
-    // token_headerPayload = t_hp
-    // token_signature = t_s
+    // t_hp = token_headerPayload
+    // t_s = token_signature
     // 30 min, given in Milli Seconds
     res.cookie('t_hp', headerPayload, {expires: true, maxAge: COOKIE_PAYLOAD_TOKEN_AGE}); // secure, 30 min life {secure: true, expires: true}
     res.cookie('t_s', signature, {httpOnly: true}); // secure, httpOnly, session life
@@ -98,8 +102,9 @@ router.post('/login', async (req, res, next) => {
 });
 
 router.post('/register', async (req, res, next) => {
-    const email = req.body.data.attributes.email;
-    const user = await User.findOne({ email: email });
+
+    const email = req.body.data.email;
+    const user = await User.findOne({ email });
 
     if (user) {
        return res.status(409)
@@ -109,11 +114,11 @@ router.post('/register', async (req, res, next) => {
         });
     }
 
-    const pwHash = bcrypt.hashSync(req.body.data.attributes.password, 10);
+    const pwHash = bcrypt.hashSync(req.body.data.password, 10);
 
     const newUser = new User({
-        firstName: req.body.data.attributes.firstName,
-        lastName: req.body.data.attributes.lastName,
+        firstName: req.body.data.firstName,
+        lastName: req.body.data.lastName,
         email: email,
         passwordHash: pwHash
     });
@@ -139,13 +144,13 @@ router.post('/register', async (req, res, next) => {
 
 
 router.post('/logout', (req, res, next) => {
-    // token_headerPayload = t_hp
-    // token_signature = t_s
+    // t_hp = token_headerPayload
+    // t_s = token_signature
     return res
         .clearCookie('t_hp')
         .clearCookie('t_s')
-        .cookie('t_hp', {expires: new Date(0)})
-        .cookie('t_s', {expires: new Date(0)})
+        .cookie('t_hp', '', {expires: new Date(0)})
+        .cookie('t_s', '', {expires: new Date(0)})
         .status(200).json({
             data: {
                 message: 'Logged out.'

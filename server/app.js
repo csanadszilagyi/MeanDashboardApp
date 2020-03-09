@@ -1,13 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors'); // allows us to any domain access this api
 const passport = require('passport');
 const mongoose = require('mongoose');
-const config = require('./config/settings');
 const app = express();
 
 mongoose
-    .connect(config.DB_HOST, 
+    .connect(process.env.DB_HOST, 
     { 
         useCreateIndex: true,
         useNewUrlParser: true, 
