@@ -4,11 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "client-install": "cd ../client && npm install",
     "start": "node app.js",
-    "server": "nodemon app.js"
+    "server": "nodemon app.js",
+    "dev-all": "concurrently \"cd ../client && npm run start\" \"nodemon app.js\""
   },
   "dependencies": {
     "bcryptjs": "*",
+    "concurrently": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "*",
@@ -20,6 +23,6 @@
     "passport-jwt": "*"
   },
   "devDependencies": {},
-  "author": "",
+  "author": "sc",
   "license": "MIT"
 }

@@ -1,14 +1,13 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "dashboardapp-client",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "start:proxy": "ng serve --proxy-config proxy.conf.json"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
