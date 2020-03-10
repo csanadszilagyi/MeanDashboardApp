@@ -12,9 +12,6 @@
                     <li [ngClass]="{disabled:currentPage === 1}" class="page-item">
                         <span class="page-link" (click)="paginatePrev()">Previous</span>
                     </li>
-                    <!-- <li class="page-item active">
-                        <span class="page-link">{{ currentPage }}</span>
-                    </li> -->
                     <li class="page-item" *ngFor="let pageNumber of paginationInfo.pageNumbers" [ngClass]="{active:currentPage === pageNumber}">
                         <span *ngIf="currentPage !== pageNumber; else noClick" class="page-link" (click)="paginate(pageNumber)">{{ pageNumber }}</span>
                         <ng-template #noClick>
