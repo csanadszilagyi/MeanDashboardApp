@@ -1,6 +1,6 @@
 import { Resource } from '../models/resource.model';
 import {Serializer} from '../serializers/Serializer';
-import { of as observableOf,  Observable, throwError, empty } from 'rxjs';
+import { Observable, throwError, empty } from 'rxjs';
 import { map, tap, catchError} from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AppConfigService } from './app-config.service';
@@ -8,8 +8,7 @@ import { PaginatedCollection } from 'src/app/misc/utils';
 
 export class ResourceApiService<T extends Resource> {
   
-    API_URL: string; // = AppConfigService.settings.apiUrl;
-
+    API_URL: string;
     protected headers: HttpHeaders = new HttpHeaders();
 
     constructor(
@@ -22,8 +21,6 @@ export class ResourceApiService<T extends Resource> {
         }
 
       create(item: T): Observable<any> {
-
-
         return this.httpClient
           .post<any>(
             `${this.API_URL}/${this.endpoint}`, 
@@ -84,9 +81,7 @@ export class ResourceApiService<T extends Resource> {
       protected handleError(error: any) {
         const statusError = `${error.status}: ${error.statusText}`;
         console.log(`Request failed: \n${statusError}`);
-        // Let the app keep running by returning an empty result.
-      
         return empty();
-        // return throwError(statusError);  // empty(); // observableOf(error);
+        // return throwError(statusError);
       }
 }

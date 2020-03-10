@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RegData } from 'src/app/misc/utils';
 import { FormHandler } from 'src/app/misc/form-handler';
 import { UserResourceService } from '../../services/user-resource.service';
 import { User } from 'src/app/core/models/user.model';
 import { UserSessionService } from 'src/app/core/services/user-session.service';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',

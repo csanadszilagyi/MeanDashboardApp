@@ -28,7 +28,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       tap( _ => {
         this.loading = true;
       }),
-      switchMap((page: number) => this.getUsers(page)),
+      switchMap((page: number) => this.getUsers(page))
     )
     .subscribe((data: PaginatedCollection<User>) => {
       this.users = data.collection;
