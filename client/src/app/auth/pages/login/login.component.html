@@ -33,8 +33,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12">
-                    <button [disabled]="formSubmitted" type="submit" class="btn bg-primary text-white btn-block">
+                <div class="form-group col-12 mt-3">
+                    <button [disabled]="formSubmitted || formState.type === 'success'" type="submit" class="btn bg-primary text-white btn-lg btn-block">
                         <span *ngIf="formSubmitted" class="spinner-border spinner-border-sm align-middle" role="status" aria-hidden="true"></span>
                         Login
                     </button>
@@ -43,7 +43,7 @@
                     <h4 class="text-center">Or</h4>
                 </div>
                 <div class="form-group col-12">
-                    <button type="button" class="btn btn-light btn-block" (click)="gotoRegistration($event)">
+                    <button [disabled]="formSubmitted || formState.type === 'success'" type="button" class="btn btn btn-outline-dark btn-lg btn-block" (click)="gotoRegistration($event)">
                         Register
                     </button>
                 </div>

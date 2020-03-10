@@ -24,16 +24,6 @@ export class LoginComponent extends FormHandler<LoginData> implements OnInit {
     if (this.initialMessage !== '') {
       this.setFormState({type: FormStatus.ERROR, message: this.initialMessage});
     }
-    /*
-    this.activatedRoute.params.subscribe(params => {
-      console.log(params);
-      const message = params?.message || '';
-      
-      if (message !== '') {
-        this.setFormState({type: FormStatus.ERROR, message});
-      }
-    });
-   */
   }
 
   login(): void {
