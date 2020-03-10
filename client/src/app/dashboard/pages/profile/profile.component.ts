@@ -11,20 +11,16 @@ import { map } from 'rxjs/operators';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent extends FormHandler<RegData> implements OnInit {
-
-  user: User;
+export class ProfileComponent extends FormHandler<User> implements OnInit {
 
   constructor(private userResourceService: UserResourceService,
               private userSessionService: UserSessionService) { 
-    super(RegData);
+    super(User, {});
   }
 
   save(): void {
-    this.user = { ...this.user, ...this.formData};
-    console.log(this.user);
 
-    this.userResourceService.update(this.user)
+    this.userResourceService.update(this.formData)
       .subscribe(
         result => {
           console.log(result);
@@ -42,7 +38,6 @@ export class ProfileComponent extends FormHandler<RegData> implements OnInit {
     this.userResourceService.read<string>(id)
       .subscribe(
         (userData: User) => {
-          this.user = userData;
           
           this.formData = Object.assign(this.formData, userData);
           console.log(this.formData);
