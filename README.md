@@ -12,4 +12,4 @@ Create .env file in /server containing the following attributes with your values
 - PORT=
 
 Finally, enter command 'npm run dev-all" which will concurrently run a node and angular dev-server.
-MongoDB has been not provided yet.
+MongoDB has not been provided yet.
