@@ -14,3 +14,8 @@ PORT=
 ```
 Finally, enter command 'npm run dev-all" which will concurrently run a node and angular dev-server.
 MongoDB has not been provided yet.
+
+##Features
+- registration and login using JWT
+- listing users with pagination
+- can view/edit profile
