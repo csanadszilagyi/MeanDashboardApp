@@ -1,7 +1,7 @@
 # MeanDashboardApp
 Dashboard app with simple authentication using JWT. The application was built with nodejs, express, angular and mongodb.
 
-# Useage
+# Usage
 CD into the /server, and firstly install packages for the backend by typing 'npm install'.
 Then, 'npm run client-install' to install packages for the client.
 
