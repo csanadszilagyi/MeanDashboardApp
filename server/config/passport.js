@@ -3,7 +3,6 @@ const jwtStrategy = require('passport-jwt').Strategy;
 // const extractJwt = require('passport-jwt').ExtractJwt;
 // const jwt = require('jsonwebtoken');
 const utils = require('../misc/utils');
-
 const User = require('../models/user');
 
 const reconstructJWT = (header_payload, signature) => {
@@ -40,7 +39,7 @@ module.exports = function(passport) {
     // opts.audience = '';
     
     passport.use(new jwtStrategy(opts, async (jwtPayload, done) => {
-
+        
         if (jwtPayload) {
 
             const user = await User.findById(jwtPayload.sub);

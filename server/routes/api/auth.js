@@ -40,15 +40,17 @@ const createHeaderSignature = jwtToken => {
 }
 
 // 30 min - in MS
-const COOKIE_PAYLOAD_TOKEN_AGE = 600000; // 1 min = 60000 Ms
+// 1 min = 60000 Ms
+const COOKIE_PAYLOAD_TOKEN_AGE = 30*60*1000; 
 
 /* 
  * GOAL:
+ * https://medium.com/lightrail/getting-token-authentication-right-in-a-stateless-single-page-application-57d0c6474e3
  * Jwt token stored in cookies in two parts: first part contains the header.payload, second contains the signature.
  * If the jwt expires (checked on the backend with each requests on the jwt-protected routes), 
- * the server sending a response to the client to ask the user
- * to retype his password. If correct, new payload will be created for 10 minutes. 
- * The payload cookie's lifetime is 1 hour.
+ * the server sending a response indicating to the client to ask the user
+ * to retype his password. If correct, new payload will be created for one hour. 
+ * The header_payload (h_pl) cookie's lifetime is 30 minutes.
  * NOTE: It is not implemented yet!
  */
 router.post('/refreshtoken', async (req, res, next) => {
@@ -81,13 +83,13 @@ router.post('/login', async (req, res, next) => {
     });
 
 
-    const {headerPayload, signature} = createHeaderSignature(accessToken);
+    const { headerPayload, signature } = createHeaderSignature(accessToken);
 
     // t_hp = token_headerPayload
     // t_s = token_signature
-    // 30 min, given in Milli Seconds
-    res.cookie('t_hp', headerPayload, {expires: true, maxAge: COOKIE_PAYLOAD_TOKEN_AGE}); // secure, 30 min life {secure: true, expires: true}
-    res.cookie('t_s', signature, {httpOnly: true}); // secure, httpOnly, session life
+    // if HTTPS, you should give 'secure' attribute also
+    res.cookie('t_hp', headerPayload, {expires: true, maxAge: COOKIE_PAYLOAD_TOKEN_AGE});
+    res.cookie('t_s', signature, {httpOnly: true});
     
     return res.status(200).json({
         data: {
