@@ -8,7 +8,6 @@ Then, 'npm run client-install' to install packages for the client.
 Create .env file in /server containing the following attributes with your values:
 ```
 ACCESS_TOKEN_SECRET=
-REFRESH_TOKEN_SECRET=
 DB_HOST=
 PORT=
 ```
