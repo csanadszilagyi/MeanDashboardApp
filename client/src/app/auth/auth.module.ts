@@ -12,11 +12,13 @@ import { FormsModule } from '@angular/forms';
 import { CookieTokenStorage } from './token/cookie-token-storage';
 import { RegisterComponent } from './pages/register/register.component';
 import { CoreModule } from '../core/core.module';
+import { CookieTokenService } from './token/cookie-token-service';
 
 export const AUTH_PROVIDERS = [
   AuthService,
   JwtInterceptor,
   AuthGuard,
+  CookieTokenService,
   CookieTokenStorage
 ];
 
@@ -35,7 +37,8 @@ export const AUTH_PROVIDERS = [
   ],
   providers: [
     AuthService,
-    CookieTokenStorage,
+    CookieTokenService,
+    CookieTokenStorage
   ],
   exports: [
     AuthComponent,

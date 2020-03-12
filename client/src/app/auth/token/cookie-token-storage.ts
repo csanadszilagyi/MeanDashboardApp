@@ -10,9 +10,8 @@ export class CookieTokenStorage {
 
   constructor() {}
 
-  get(): Observable<AuthJWTCookieToken> {
+  get(): AuthJWTCookieToken {
 
-    return Observable.create((observer) => {
 
       const allCookies = document.cookie;
 
@@ -28,22 +27,14 @@ export class CookieTokenStorage {
       let payload = '';
       if (_has(list, this.key)) {
         payload = list[this.key];
-        observer.next(new AuthJWTCookieToken(payload));
-        observer.complete();
+        return new AuthJWTCookieToken(payload);
         /*
         const splitted = list[this.key].split('.');
         payload = splitted.length >= 2 ? splitted[1] : '';
         */
       }
-      else {
-        observer.error('No payload cookie has found');
-      }
-      
-    });
 
-
-    
-    // return new AuthJWTCookieToken(payload);
+      return null;
   }
 
   set(token: AuthJWTCookieToken) {}

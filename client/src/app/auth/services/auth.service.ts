@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoginData, SessionState, SubmitResult } from 'src/app/misc/utils';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 import { UserSessionService } from 'src/app/core/services/user-session.service';
-import { CookieTokenStorage } from '../token/cookie-token-storage';
+import { CookieTokenService } from '../token/cookie-token-service';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +17,7 @@ export class AuthService {
   constructor(protected http: HttpClient,
               protected router: Router,
               protected userSession: UserSessionService,
-              protected cookieTokenStorage: CookieTokenStorage) { 
+              protected cookieTokenService: CookieTokenService) { 
     
     // getting api url from config service
     this.authUrl = AppConfigService.settings.apiUrl + '/auth';
@@ -49,7 +49,7 @@ export class AuthService {
         .subscribe(
           (response: HttpResponse<any>) => {
 
-            this.cookieTokenStorage.get()
+            this.cookieTokenService.get()
             .subscribe(
               (token) => {
                 const payload = token.getPayload();
