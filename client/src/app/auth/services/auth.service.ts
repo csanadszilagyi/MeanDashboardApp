@@ -49,21 +49,30 @@ export class AuthService {
         .subscribe(
           (response: HttpResponse<any>) => {
 
-            const token = this.cookieTokenStorage.get();
-            const payload = token.getPayload();
-            const id = payload.user.id;
+            this.cookieTokenStorage.get()
+            .subscribe(
+              (token) => {
+                const payload = token.getPayload();
+                const id = payload.user.id;
+                this.userSession.changeState({state: SessionState.valid, id});
 
-            this.userSession.changeState({state: SessionState.valid, id});
-
-            resolve({
-              message: 'You have successfully logged in! Redirecting to the dashboard...',
-              callback: () => {
-                setTimeout(() => {
-                  this.router.navigate(['/dashboard']);
-                }, 2000);
-                
+                resolve({
+                  message: 'You have successfully logged in! Redirecting to the dashboard...',
+                  callback: () => {
+                    setTimeout(() => {
+                      this.router.navigate(['/dashboard']);
+                    }, 2000);
+                    
+                  }
+                });
+              },
+              (error) => {
+                reject(error);
               }
-            });
+            );
+            
+
+           
           },
           (error: string) => {
             reject(error);

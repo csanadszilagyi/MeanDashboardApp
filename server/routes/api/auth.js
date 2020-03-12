@@ -39,10 +39,6 @@ const createHeaderSignature = jwtToken => {
     };
 }
 
-// 30 min - in MS
-// 1 min = 60000 Ms
-const COOKIE_PAYLOAD_TOKEN_AGE = 30*60*1000; 
-
 /* 
  * GOAL:
  * https://medium.com/lightrail/getting-token-authentication-right-in-a-stateless-single-page-application-57d0c6474e3
@@ -89,9 +85,9 @@ router.post('/login', async (req, res, next) => {
     // t_s = token_signature
     // if HTTPS, you should give 'secure' attribute also
     // for IE compatibility 'expires' option is used instead of 'maxAge'
-    const expires = new Date(Date.now() + COOKIE_PAYLOAD_TOKEN_AGE);
+    const expires = new Date(Date.now() + config.COOKIE_PAYLOAD_TOKEN_AGE);
 
-    res.cookie('t_hp', headerPayload, {expires}); // alternative: maxAge: COOKIE_PAYLOAD_TOKEN_AGE
+    res.cookie('t_hp', headerPayload, {expires}); // alternative: maxAge: config.COOKIE_PAYLOAD_TOKEN_AGE
     res.cookie('t_s', signature, {httpOnly: true});
     
     return res.status(200).json({

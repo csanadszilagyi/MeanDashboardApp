@@ -21,7 +21,6 @@ export class ProfileComponent extends FormHandler<User> implements OnInit {
     this.userResourceService.update(this.formData)
       .subscribe(
         result => {
-          console.log(result);
           this.submissionSuccess({message: result.data.message});
         }
       );
@@ -36,13 +35,11 @@ export class ProfileComponent extends FormHandler<User> implements OnInit {
     this.userResourceService.read<string>(id)
       .subscribe(
         (userData: User) => {
-          
           this.formData = Object.assign(this.formData, userData);
-          console.log(this.formData);
         },
         error => {
           console.log(error);
-        });
+        }
+      );
   }
-
 }
