@@ -13,6 +13,7 @@ export class CookieTokenService {
         if (token) {
             return of(token);
         }
-        return throwError('Payload cookie is not provided.');
+        // Payload cookie is not provided:
+        return throwError('Token error.');
     }
 }
