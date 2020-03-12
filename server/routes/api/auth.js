@@ -88,7 +88,10 @@ router.post('/login', async (req, res, next) => {
     // t_hp = token_headerPayload
     // t_s = token_signature
     // if HTTPS, you should give 'secure' attribute also
-    res.cookie('t_hp', headerPayload, {expires: true, maxAge: COOKIE_PAYLOAD_TOKEN_AGE});
+    // for IE compatibility 'expires' option is used instead of 'maxAge'
+    const expires = new Date(Date.now() + COOKIE_PAYLOAD_TOKEN_AGE);
+
+    res.cookie('t_hp', headerPayload, {expires}); // alternative: maxAge: COOKIE_PAYLOAD_TOKEN_AGE
     res.cookie('t_s', signature, {httpOnly: true});
     
     return res.status(200).json({
