@@ -28,6 +28,12 @@ export interface SessionUserData {
     state?: SessionState;
 }
 
+// General error class
+export interface AppError<ErrType extends Object | string> {
+    type: ErrType;
+    message?: string;
+}
+
 export interface SubmitResult {
     data?: any,
     message?: string;
