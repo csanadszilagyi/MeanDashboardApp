@@ -32,47 +32,6 @@ const mapUser = (user) => {
     };
 }
 
-function getPaginatedCollection(page, perPage, query) {
-
-    if (page < 1) {
-        page = 1;
-    }
-
-    const from = (page - 1) * perPage;
-    // const to = from + perPage;
-    const ask = query || {};
-    console.log(ask);
-    return new Promise((resolve, reject) => {
-        User.countDocuments(ask)
-            .then((count) => {
-                if (count > from) {
-                    const lastPage = Math.ceil(count / perPage);
-                    User.find()
-                        .skip(from)
-                        .limit(perPage)
-                        .then(users => {
-                            resolve({
-                                data: users, 
-                                meta: {
-                                    total: count,
-                                    numItems: users.length, // can be smaller than perPage, if we are on the lastPage
-                                    from: from + 1,
-                                    to: from + users.length,
-                                    perPage,
-                                    currentPage: page,
-                                    lastPage
-                                }
-                            });  
-                        })
-                        .catch(error => reject(error));
-                }
-                else {
-                    reject('The requested chunk of collection can not be returned.');
-                }
-            })
-    });
-}
-
 router.get('/all', (req, res, next) => {
     User.find()
         .then((users) => {
@@ -128,8 +87,8 @@ router.get('', [
             // handle search
             const searchTerm = req.query.search;
 
-            // query = {$or:[{firstName:{$regex: searchTerm, $options: 'i'}},{lastName:{$regex: searchTerm, $options: 'i'}}]};
-            query = {email:{$regex: searchTerm, $options: 'i'}};
+            query = {$or:[{firstName:{$regex: searchTerm, $options: 'i'}},{lastName:{$regex: searchTerm, $options: 'i'}}]};
+            // query = {email:{$regex: searchTerm, $options: 'i'}};
         }
 
         const page = req.query.page || 1;

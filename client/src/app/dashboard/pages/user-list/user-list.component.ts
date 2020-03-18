@@ -9,7 +9,7 @@ import { range as _range } from 'lodash';
 
 interface LoadInfo {
   page: number;
-  params: HttpParams;
+  search: string;
 }
 
 @Component({
@@ -22,7 +22,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   readonly itemsPerPage: number = 4;
   users: User[];
 
-  dataLoader$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  dataLoader$: BehaviorSubject<LoadInfo> = new BehaviorSubject<LoadInfo>({page: 1, search: ''});
 
   paginationInfo: PaginationInfo = null;
   loading: boolean = false;
@@ -34,43 +34,42 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   error: string = '';
 
-  params: HttpParams = new HttpParams();
-
   constructor(protected userService: UserResourceService) { }
 
   ngOnInit(): void {
 
     this.paginationSubscription = this.dataLoader$.pipe(
-      tap( _ => {
-        this.loading = true;
-      }),
-      switchMap((page: number) => this.getUsers(page))
-    )
-    .subscribe((data: PaginatedCollection<User>) => this.handleResult(data));
-
-    // handling search
-    this.searchSubscription = this.searchTerm$.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      tap( _ => {
-        this.loading = true;
-      }),
-      switchMap((searchTerm: string) => this.getSearchResult(searchTerm))
+        tap( _ => {
+          this.loading = true;
+        }),
+        switchMap((info: LoadInfo) => this.getUsers(info))
     )
     .subscribe(
       (data: PaginatedCollection<User>) => this.handleResult(data)
+    );
+
+    // handling search
+    this.searchSubscription = this.searchTerm$.pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap((search: string) => of(search))
+    )
+    .subscribe(
+        (search: string) => {
+          this.changeData({page: 1, search: search});
+        }
     )
   }
 
   handleResult(data: PaginatedCollection<User>): void {
+    
     if (!data.collection.length) {
-      console.log(data.collection);
       this.error = 'No result';
-    } else {
+    } 
+    else {
       this.error = '';
     }
     
-
     this.users = data.collection;
     this.paginationInfo = data.pagination;
     this.paginationInfo.pageNumbers = this.getShiftedPages(this.paginationInfo.lastPage); 
@@ -106,35 +105,45 @@ export class UserListComponent implements OnInit, OnDestroy {
     let pages = _range(startPage, endPage + 1);
     return pages;
   }
-
-  getSearchResult(searchTerm: string): Observable<PaginatedCollection<User>> {
-    this.params = this.params
-      .set('search', `${searchTerm}`)
-      .set('page', '1')
-      .set('count', `${this.itemsPerPage}`);
-
-    return this.userService.list(this.params);
-  }
   
-  getUsers(page: number): Observable<PaginatedCollection<User>> {
-
-    this.params = this.params
-      .set('page', `${page}`)
+  getUsers(info: LoadInfo): Observable<PaginatedCollection<User>> {
+    // adding count
+    let params = new HttpParams()
       .set('count', `${this.itemsPerPage}`);
 
-    return this.userService.list(this.params);
+    Object.keys(info).forEach(key => {
+        // we dont want to give empty strings
+        const value = info[key].toString() || '';
+        if (value !== '') {
+          params = params.set(key, value);
+        }
+    });
+    return this.userService.list(params);
   }
   
   reload() {
-    this.dataLoader$.next(this.currentPage);
+    this.dataLoader$.next(this.currentInfo);
   }
 
-  get currentPage(): number {
+  get currentInfo(): LoadInfo {
     return this.dataLoader$.value;
   }
 
+  get currentPage(): number {
+    return this.dataLoader$.value.page;
+  }
+
+  get currentSearch(): string {
+    return this.dataLoader$.value.search || '';
+  }
+
+  protected changeData(info: LoadInfo): void {
+    const newInfo = {...this.currentInfo, ...info};
+    this.dataLoader$.next(newInfo);
+  }
+
   paginate(page: number): void {
-    this.dataLoader$.next(page);
+    this.changeData({page, search: this.currentSearch});
   }
 
   paginatePrev() {
@@ -153,16 +162,14 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   handleInputEventOfSearch($event) {
 
-    const val = $event.target.value.toString();
+    const str = $event.target.value.toString().trim();
 
-    if (val !== '') {
-      this.searchTerm$.next(val);
+    if (str !== '') {
+      this.searchTerm$.next(str);
       return;
     }
 
-    this.params = this.params.delete('search');
-
-    this.paginate(1);
+    this.changeData({page: 1, search: ''});
    
   }
 }
