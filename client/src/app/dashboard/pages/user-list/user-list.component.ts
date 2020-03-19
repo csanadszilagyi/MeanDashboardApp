@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Observable, Subject, empty, of, BehaviorSubject, Subscription } from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
-import { switchMap, map, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { switchMap, map, tap, debounceTime, distinctUntilChanged, filter, throttleTime } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
 import { UserResourceService } from '../../services/user-resource.service';
 import { PaginatedCollection, PaginationInfo, AppError } from 'src/app/misc/utils';
@@ -19,7 +19,7 @@ interface LoadInfo {
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
-  readonly itemsPerPage: number = 4;
+  readonly itemsPerPage: number = 10;
   users: User[];
 
   dataLoader$: BehaviorSubject<LoadInfo> = new BehaviorSubject<LoadInfo>({page: 1, search: ''});
@@ -27,7 +27,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   paginationInfo: PaginationInfo = null;
   loading: boolean = false;
 
-  paginationSubscription: Subscription;
+  loaderSubscription: Subscription;
   searchSubscription: Subscription;
 
   searchTerm$: Subject<string> = new Subject<string>();
@@ -38,7 +38,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.paginationSubscription = this.dataLoader$.pipe(
+    this.loaderSubscription = this.dataLoader$.pipe(
         tap( _ => {
           this.loading = true;
         }),
@@ -50,13 +50,14 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     // handling search
     this.searchSubscription = this.searchTerm$.pipe(
-        debounceTime(400),
+        filter((search: string) => search.length === 0 || search.length > 1),
+        debounceTime(500),
         distinctUntilChanged(),
-        switchMap((search: string) => of(search))
+        // switchMap((search: string) => of(search))
     )
     .subscribe(
-        (search: string) => {
-          this.changeData({page: 1, search: search});
+        (search: string) => {     
+          this.changeData({page: 1, search});
         }
     )
   }
@@ -77,7 +78,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.paginationSubscription.unsubscribe();
+    this.loaderSubscription.unsubscribe();
     this.searchSubscription.unsubscribe();
   }
 
@@ -163,13 +164,14 @@ export class UserListComponent implements OnInit, OnDestroy {
   handleInputEventOfSearch($event) {
 
     const str = $event.target.value.toString().trim();
-
+    this.searchTerm$.next(str);
+/*
     if (str !== '') {
-      this.searchTerm$.next(str);
       return;
     }
 
     this.changeData({page: 1, search: ''});
-   
+    */
+    
   }
 }

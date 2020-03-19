@@ -4,8 +4,13 @@
             <div class="col-md-6 col-xs-12">
                 <h3 class="card-header-title text-left font-size-lg text-capitalize font-weight-normal">Users</h3>
             </div>
-            <div class="col-md-6 col-xs-12">
-                <input class="form-control" type="text" (input)="handleInputEventOfSearch($event)" placeholder="Name">
+            <div class="col-md-6 col-xs-12 d-flex justify-content-end">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label class="mr-3 text-capitalize" for="search">Search</label>
+                        <input id="search" name="search" class="form-control" type="text" (input)="handleInputEventOfSearch($event)" placeholder="Name">
+                    </div>
+                </div>
             </div> 
         </div>
     </div>
