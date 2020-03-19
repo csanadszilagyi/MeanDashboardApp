@@ -24,6 +24,7 @@
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
+    "ngx-smart-modal": "^7.4.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

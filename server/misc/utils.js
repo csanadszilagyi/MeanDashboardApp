@@ -1,3 +1,5 @@
+const { validationResult } = require('express-validator');
+
 const createCookieList = reqHeaderCookieStr => {
 
     let list = {};
@@ -7,6 +9,27 @@ const createCookieList = reqHeaderCookieStr => {
     });
     return list;
 }
+
+
+const errorMessages = new Map([
+    ['shouldExist', 'This field should exists.'],
+    ['shouldNotEmpty', 'This field should not be empty.']
+]);
+
+function errorFormatter({ location, msg, param, value, nestedErrors }) {
+    return `${location}[${param}]: ${msg}`;
+};
+
+function hasErrorIn (request) {
+    const result = validationResult(request).formatWith(errorFormatter);
+    if (!result.isEmpty()) {
+      // Response will contain something like
+      // { errors: [ "body[password]: must be at least 10 chars long" ] }
+      return [true, result.array()];
+    }
+    return [false, []];
+}
+
 
 function errorHandler(err, req, res, next) {
     if (typeof (err) === 'string') {
@@ -70,6 +93,9 @@ function getPaginatedCollection(Model, page, perPage, query) {
 }
 module.exports = {
     createCookieList,
+    errorMessages,
+    errorFormatter,
+    hasErrorIn,
     errorHandler,
     getPaginatedCollection
 };

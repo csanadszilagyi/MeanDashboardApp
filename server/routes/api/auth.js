@@ -6,6 +6,9 @@ const config = require('../../config/settings');
 const router = express.Router();
 const User = require('../../models/user');
 
+const { body, oneOf } = require('express-validator');
+const { errorMessages, errorFormatter, hasErrorIn} = require('../../misc/utils');
+
 /**
  * @return user, if found by email and password hashes are equal
  * @param email
@@ -53,8 +56,33 @@ router.post('/refreshtoken', async (req, res, next) => {
     
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', [
+        body('data.email')
+            .exists().withMessage(errorMessages.get('shouldExist'))
+            .notEmpty().withMessage(errorMessages.get('shouldNotEmpty'))
+            .isEmail().withMessage(errorMessages.get('Should be an email.'))
+            .trim()
+            .escape(),
+        body('data.password')
+            .exists().withMessage(errorMessages.get('shouldExist'))
+            .notEmpty().withMessage(errorMessages.get('shouldNotEmpty'))
+            .trim()
+            .escape(),
+    ],
+    async (req, res, next) => {
     
+    const [errorResult, errors] = hasErrorIn(req);
+
+    if (errorResult === true) {
+        return res
+            .status(400)
+            .json({
+                data: {
+                    message: errors
+                }
+            });
+    }
+
     const email = req.body.data.email;
     const password = req.body.data.password;
 
@@ -93,16 +121,52 @@ router.post('/login', async (req, res, next) => {
     return res.status(200).json({
         data: {
             user: {
-                id: user.id,
+                // id: user.id,
                 email: user.email
             },
-            token: accessToken
+            // providing the whole token is not neccessary at this time (bacause of using cookies)
+            // token: accessToken
         }
     }); 
     
 });
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', [
+    body('data.email')
+        .exists().withMessage(errorMessages.get('shouldExist'))
+        .notEmpty().withMessage(errorMessages.get('shouldNotEmpty'))
+        .isEmail().withMessage(errorMessages.get('Should be an email.'))
+        .trim()
+        .escape(),
+    body('data.password')
+        .exists().withMessage(errorMessages.get('shouldExist'))
+        .notEmpty().withMessage(errorMessages.get('shouldNotEmpty'))
+        .trim()
+        .escape(),
+    body('data.firstName')
+        .exists().withMessage(errorMessages.get('shouldExist'))
+        .notEmpty().withMessage(errorMessages.get('shouldNotEmpty'))
+        .trim()
+        .escape(),
+    body('data.lastName')
+        .exists().withMessage(errorMessages.get('shouldExist'))
+        .notEmpty().withMessage(errorMessages.get('shouldNotEmpty'))
+        .trim()
+        .escape(),
+    ],
+ async (req, res, next) => {
+
+    const [errorResult, errors] = hasErrorIn(req);
+
+    if (errorResult === true) {
+        return res
+            .status(400)
+            .json({
+                data: {
+                    message: errors
+                }
+            });
+    }
 
     const email = req.body.data.email;
     const user = await User.findOne({ email });

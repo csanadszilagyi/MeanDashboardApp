@@ -38,7 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport')(passport);
 
-app.use('/data', genFakeJsonData);
+app.use('/users', genFakeJsonData);
 app.use('/api/auth', auth);
 app.use('/api/users', passport.authenticate('jwt', {session: false}), users);
 

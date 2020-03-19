@@ -6,20 +6,27 @@ import { UserListComponent } from './pages/user-list/user-list.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { UserResourceService } from './services/user-resource.service';
 import { FormsModule } from '@angular/forms';
+import { UserViewComponent } from './pages/user-view/user-view.component';
+
+import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { ModalService } from './services/modal-service';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     UserListComponent, 
-    ProfileComponent
+    ProfileComponent, 
+    UserViewComponent
   ],
   imports: [
     CommonModule,
     DashboardRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxSmartModalModule.forChild()
   ],
   providers: [
-    UserResourceService
+    UserResourceService,
+    ModalService
   ]
 })
 export class DashboardModule { }

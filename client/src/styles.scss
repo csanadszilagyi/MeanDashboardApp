@@ -8,6 +8,10 @@ body {
     color: #333;
 }
 
+body.dialog-open {
+    overflow: auto !important;
+}
+
 .card {
     box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 
     0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 

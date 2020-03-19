@@ -2,26 +2,9 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/user');
 
-const { query, oneOf, validationResult } = require('express-validator');
+const { param, query, oneOf } = require('express-validator');
 
-const errorMessages = new Map([
-    ['shouldExist', 'This field should exists.'],
-    ['shouldNotEmpty', 'This field should not be empty.']
-]);
-
-const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
-    return `${location}[${param}]: ${msg}`;
-};
-
-function hasErrorIn (request) {
-    const result = validationResult(request).formatWith(errorFormatter);
-    if (!result.isEmpty()) {
-      // Response will contain something like
-      // { errors: [ "body[password]: must be at least 10 chars long" ] }
-      return [true, result.array()];
-    }
-    return [false, []];
-}
+const { errorMessages, errorFormatter, hasErrorIn} = require('../../misc/utils');
 
 const mapUser = (user) => {
     return {
@@ -153,7 +136,6 @@ router.put('/:id', (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
 
     const id = req.params.id.toString();
-
     const user = await User.findById(id);
 
     if (user) {
@@ -166,6 +148,26 @@ router.get('/:id', async (req, res, next) => {
         data: {
             id: id,
             message: 'User was not found.',
+        }
+    });
+});
+
+router.delete('/:id', [ param('id').exists().notEmpty().trim().escape() ], async (req, res, next) => {
+
+    const id = req.params.id;
+    const user = await User.findByIdAndDelete(id);
+
+    if (user) {
+        return res.status(200).json({
+            data: {
+                message: `User (${user.email}) is deleted.`
+            }
+        });
+    }
+    
+    return res.status(404).json({
+        data: {
+            message: `User with ${user.email} was not found.`,
         }
     });
 });

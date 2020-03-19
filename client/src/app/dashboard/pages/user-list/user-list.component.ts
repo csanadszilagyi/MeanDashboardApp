@@ -1,11 +1,13 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Observable, Subject, empty, of, BehaviorSubject, Subscription } from 'rxjs';
 import { User } from 'src/app/core/models/user.model';
-import { switchMap, map, tap, debounceTime, distinctUntilChanged, filter, throttleTime } from 'rxjs/operators';
+import { switchMap, map, tap, debounceTime, distinctUntilChanged, filter, throttleTime, delay } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http';
 import { UserResourceService } from '../../services/user-resource.service';
 import { PaginatedCollection, PaginationInfo, AppError } from 'src/app/misc/utils';
 import { range as _range } from 'lodash';
+import { Router } from '@angular/router';
+import { ModalService, ModalInfo } from '../../services/modal-service';
 
 interface LoadInfo {
   page: number;
@@ -34,7 +36,9 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   error: string = '';
 
-  constructor(protected userService: UserResourceService) { }
+  constructor(protected userService: UserResourceService,
+              protected router: Router,
+              private modalService: ModalService) { }
 
   ngOnInit(): void {
 
@@ -162,16 +166,36 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   handleInputEventOfSearch($event) {
-
     const str = $event.target.value.toString().trim();
     this.searchTerm$.next(str);
-/*
-    if (str !== '') {
-      return;
-    }
+  }
 
-    this.changeData({page: 1, search: ''});
-    */
+  onEdit($event, id: string) {
+    $event.preventDefault();
     
+    this.router.navigate(['/dashboard/user/', `${id}`]);
+  }
+
+  onDelete($event, id: string) {
+    $event.preventDefault();
+    this.modalService.openInfoModal('sureDelete', { 
+      onAccept: () => {
+        this.modalService.closeInfoModal();
+
+        this.userService.delete<string>(id).subscribe(
+          (result: any) => {
+            
+            setTimeout(() => {
+              this.modalService.openInfoModal('info', {
+                message: result.data.message.toString(),
+                onAccept: () => this.modalService.closeInfoModal()
+              });
+            }, 1200);
+            
+            
+            this.reload();
+          });
+      }
+    });
   }
 }

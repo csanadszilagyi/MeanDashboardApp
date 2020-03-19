@@ -54,9 +54,9 @@
                     <table *ngIf="error === '' && users.length; else errorMessage" class="table table-hover table-bordered animated fadeIn">
                         <thead class="thead-dark">
                             <tr>
-                                <th scope="col">
+                                <!-- <th scope="col">
                                     ID
-                                </th>
+                                </th> -->
                                 <th scope="col">
                                     First Name
                                 </th>
@@ -66,13 +66,17 @@
                                 <th scope="col">
                                     Email
                                 </th>
+                                <th scope="col">
+                                    Actions
+                                </th>
+
                             </tr>
                         </thead>
                         <tbody class="text-center">
                             <tr *ngFor="let user of users">
-                                <td class="align-middle" scope="col">
+                               <!--  <td class="align-middle" scope="col">
                                     {{ user.id }}
-                                </td>
+                                </td> -->
                                 <td class="align-middle" scope="col">
                                     {{ user.firstName }}
                                 </td>
@@ -82,12 +86,12 @@
                                 <td class="align-middle" scope="col">
                                     {{ user.email }}
                                 </td>
-                                <!--  
+                                
                                 <td class="align-middle user-actions">
-                                    <button type="button" class="btn btn-info" (click)="handleEdit(user.id)">Edit</button>
-                                    <button type="button" class="btn btn-danger ml-2" (click)="handleDelete(user.id)">Remove</button>
+                                    <button type="button" class="btn btn-info" (click)="onEdit($event, user.id)">Edit</button>
+                                    <button type="button" class="btn btn-danger ml-2" (click)="onDelete($event, user.id)">Remove</button>
                                 </td>
-                                -->
+                                
                             </tr>
                         </tbody>
                     </table>
