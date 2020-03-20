@@ -15,6 +15,7 @@ Finally, enter command 'npm run dev-all" which will concurrently run a node and 
 MongoDB has not been provided yet.
 
 ## Features
-- registration and login using JWT
-- listing users with pagination
+- registration, login auth using JWT
+- listing users with pagination, and providing edit/delete actions
+- realtime user search
 - can view/edit profile
