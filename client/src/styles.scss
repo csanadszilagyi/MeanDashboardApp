@@ -1,49 +1,8 @@
-// @import '~animate.css/animate.min';
 
-body {
-    font-size: 16px;
-    line-height: 1.4142;
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
+@import "_customize-bootstrap.scss";
+@import "~@progress/kendo-theme-bootstrap/scss/all";
+@import "~bootstrap/scss/bootstrap";
+// or in angular.json include the line below:
+// "node_modules/bootstrap/dist/css/bootstrap.min.css",
 
-body.dialog-open {
-    overflow: auto !important;
-}
-
-.card {
-    box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 
-    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 
-    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 
-    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
-    border-width: 0;
-}
-
-.card-header {
-    display: block;
-    border-bottom-width: 1px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
-
-.card-header, .card-title {
-    text-transform: uppercase;
-    color: rgba(13, 27, 62, 0.7);
-    font-weight: bold;
-    font-size: 0.88rem;
-}
-
-.card-header-title {
-    white-space: nowrap;
-    margin: 0;
-    font-size: 1.85rem;
-}
-
-.card-header {
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 0;
-    color: inherit;
-    background-color: #fff;
-    border-bottom: 1px solid rgba(26, 54, 126, 0.125);
-}
+@import "_app.scss";

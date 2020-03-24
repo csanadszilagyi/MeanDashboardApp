@@ -37,8 +37,8 @@
       {{ infoModal.getData().message }}
     </div>
     <div class="modal-footer">
-      <button *ngIf="infoModal.getData().declineText && infoModal.getData().declineText.length" type="button" class="btn btn-secondary" data-dismiss="modal" (click)="infoModal.close()">{{ infoModal.getData()?.declineText }}</button>
-      <button type="button" class="btn btn-primary" (click)="infoModal.getData().onAccept ? infoModal.getData().onAccept($event) : infoModal.close()">{{ infoModal.getData().acceptText ||'Ok' }}</button>
+      <button *ngIf="infoModal.getData().declineText && infoModal.getData().declineText.length" type="button" class="btn bg-secondary text-white" data-dismiss="modal" (click)="infoModal.close()">{{ infoModal.getData()?.declineText }}</button>
+      <button type="button" class="btn bg-primary text-white" (click)="infoModal.getData().onAccept ? infoModal.getData().onAccept($event) : infoModal.close()">{{ infoModal.getData().acceptText ||'Ok' }}</button>
     </div>
   </ng-container>
 </ngx-smart-modal>
